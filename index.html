@@ -1,0 +1,339 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!--
+======================================================================
+ WhiteBottle Spider Chart : คู่มือการใช้งานและการแก้ไขไฟล์นี้
+======================================================================
+ ที่มา    : https://69900050bg.github.io/WhiteBottle-Coffee/
+ บันทึก   : 6 ต.ค. 2026
+ หมายเหตุ : โค้ดเดิมจากต้นฉบับคงไว้ทุกบรรทัด สิ่งที่เพิ่มมี 2 อย่าง
+            1. คอมเมนต์ภาษาไทย (ไม่มีผลต่อการทำงาน ลบออกได้)
+            2. กล่องวิธีใช้บนหน้ากราฟ ค้นหาคำว่า "เพิ่มใหม่" เพื่อดูโค้ดส่วนนี้
+
+ [1] วิธีเปิดใช้
+   1. ดับเบิลคลิกไฟล์นี้ เปิดในเบราว์เซอร์ได้ทันที ไม่ต้องติดตั้งอะไร
+   2. อินเทอร์เน็ตใช้แค่โหลดฟอนต์ IBM Plex Sans จาก Google Fonts
+      ถ้าออฟไลน์ กราฟยังทำงานครบ แต่จะใช้ฟอนต์ของเครื่องแทน
+   3. ถ้าจะอัปขึ้น GitHub Pages ให้ตั้งชื่อไฟล์เป็น index.html
+
+ [2] วิธีใช้หน้ากราฟ
+   - ปุ่มแถวบน   : เลือกชุดสาขาสำเร็จรูป (E G H, Mall, Community, Transit, ทั้ง 8 สาขา)
+   - checkbox    : กลับแกน Complaints ให้ "ยิ่งออกนอก = ยิ่งร้องเรียนน้อย"
+   - ชี้ที่รูปทรง : สาขาอื่นจางลง เหลือสาขาที่ชี้ให้เห็นชัด
+   - ชี้ที่จุดยอด : ดูค่าจริง ตำแหน่งบนสเกล 0 ถึง 100 และอันดับ
+   - คลิกรายชื่อสาขาด้านขวา : เปิดหรือปิดสาขานั้น (กด Enter หรือ Space ก็ได้)
+   - กล่อง How to use this chart : กดหัวกล่องเพื่อพับหรือกาง ปุ่ม EN / ไทย เปลี่ยนภาษาของวิธีใช้
+
+ [3] วิธีอ่านกราฟ
+   แต่ละแกนปรับสเกลแยกกัน สาขาที่ค่าต่ำสุดได้ 0 สาขาที่ค่าสูงสุดได้ 100
+   รูปทรงจึงบอก "ตำแหน่งเทียบกับสาขาอื่น" ไม่ใช่คะแนนรวม
+   รูปใหญ่ไม่ได้แปลว่าดีกว่า เพราะ Complaints และ Promotion ยิ่งสูงยิ่งแย่หรือยิ่งเปลือง
+
+ [4] วิธีแก้ไข (ค้นหาคำว่า "แก้ไข" ในไฟล์เพื่อไปยังจุดนั้น)
+   ก. แก้ตัวเลขของสาขา
+      แก้ในตัวแปร RAW ลำดับช่องคือ
+      [รหัสสาขา, ทำเล, ยอดขาย, transactions, basket, repeat, rating, complaints, promo]
+      สเกลของทุกแกนคำนวณใหม่เองอัตโนมัติ
+   ข. เพิ่มสาขาใหม่ เช่น สาขา I ต้องแก้ 4 จุด
+      1. เพิ่มแถวใน RAW
+      2. เพิ่มตัวแปรสีของสาขา I ใน :root ให้ครบทั้ง 3 ชุด (สว่าง 1 ชุด มืด 2 ชุด)
+      3. เพิ่มลายเส้นของ I ใน DASH
+      4. แก้ข้อความที่เขียนเลข 8 ตายตัว ได้แก่ "of 8" ใน tooltip,
+         "All 8 stores" ใน PRE และคำว่า eight stores ในข้อความบนหน้า
+   ค. เพิ่มหรือลบตัวชี้วัด
+      1. เพิ่มค่าใน RAW ทุกแถว แล้วตั้งชื่อช่องใน S
+      2. เพิ่มหนึ่งบรรทัดใน AX จำนวนแกนของกราฟปรับตามเอง
+      3. แก้คำว่า Seven metrics ในข้อความบนหน้า
+      ข้อควรระวัง: ถ้าทุกสาขามีค่าเท่ากันในแกนใด แกนนั้นจะคำนวณไม่ได้ (หารด้วยศูนย์)
+   ง. เปลี่ยนปุ่มชุดสาขา แก้ที่ PRE / เปลี่ยนสาขาที่แสดงตอนเปิดหน้า แก้ที่ st
+   จ. เปลี่ยนสี แก้ตัวแปรสีใน :root (อย่าลืมชุดโหมดมืด)
+   ฉ. เปลี่ยนสาขาที่เน้นเส้นหนา แก้รายชื่อ E G H ในฟังก์ชัน chart() และลายเส้นใน DASH
+   ช. เปลี่ยนขนาดกราฟ แก้ CX, CY, R คู่กับ viewBox ของแท็ก svg
+   ซ. แก้ข้อความวิธีใช้บนหน้า แก้ที่ตัวแปร HOW / เปลี่ยนภาษาเริ่มต้น แก้ที่ตัวแปร lang
+      ถ้าอยากให้กล่องพับไว้ตอนเปิดหน้า ลบคำว่า open ออกจากแท็ก details
+
+ [5] โครงสร้างไฟล์
+   ส่วนที่ 1  CSS   : สี ธีมสว่างและมืด การจัดวาง
+   ส่วนที่ 2  HTML  : โครงหน้า (กล่องเปล่าที่รอ JavaScript เติมเนื้อหา)
+   ส่วนที่ 3  JS    : ข้อมูล การคำนวณ การวาด SVG และการโต้ตอบ
+======================================================================
+-->
+<title>WhiteBottle Spider Chart</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<!-- ===== ส่วนที่ 1 : CSS ===== -->
+<style>
+/* Layout: radar chart left, store list with raw figures right; presets above. Hover or tap a store to isolate its shape. */
+/* [แก้ไข: สี] ตัวแปรสีชุดสว่าง
+   bg พื้นหลัง, surface พื้นการ์ด, ink/ink2/ink3 สีตัวอักษรเข้มไปอ่อน, line เส้นขอบ, grid เส้นกริด
+   --A ถึง --H คือสีประจำสาขา ชื่อตัวแปรต้องตรงกับรหัสสาขาใน RAW */
+:root{
+  --bg:#f6f6f4; --surface:#fcfcfb; --ink:#161615; --ink2:#52514e; --ink3:#7b7a75; --line:#e3e2dd; --grid:#e6e5e0;
+  --A:#eda100; --B:#e87ba4; --C:#008300; --D:#4a3aa7; --E:#2a78d6; --F:#e34948; --G:#1baf7a; --H:#eb6834;
+  --font:'IBM Plex Sans',system-ui,sans-serif;
+}
+/* ชุดสีโหมดมืด มี 2 ชุดที่ค่าเหมือนกัน
+   ชุดแรกทำงานเมื่อเครื่องผู้ใช้ตั้งโหมดมืด ชุดที่สองทำงานเมื่อกำหนด data-theme="dark" ที่แท็ก html
+   ถ้าแก้สี ต้องแก้ให้ตรงกันทั้งสองชุด */
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121211; --surface:#1a1a19; --ink:#f4f4f1; --ink2:#c3c2b7; --ink3:#8f8e86; --line:#2d2d2b; --grid:#2e2e2b;
+  --A:#c98500; --B:#d55181; --C:#2f9e2f; --D:#9085e9; --E:#3987e5; --F:#e66767; --G:#199e70; --H:#d95926; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121211; --surface:#1a1a19; --ink:#f4f4f1; --ink2:#c3c2b7; --ink3:#8f8e86; --line:#2d2d2b; --grid:#2e2e2b;
+  --A:#c98500; --B:#d55181; --C:#2f9e2f; --D:#9085e9; --E:#3987e5; --F:#e66767; --G:#199e70; --H:#d95926; color-scheme:dark}
+/* โครงหน้า: .wrap จัดกลางกว้างสุด 1180px, .bar คือแถวปุ่ม, .seg button คือปุ่มทรงแคปซูล
+   ปุ่มที่ถูกเลือก (aria-pressed="true") จะกลับสีเป็นพื้นเข้ม */
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:14px;line-height:1.45;padding-inline:20px;padding-block:20px 48px}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+h1{font-size:22px;font-weight:600;margin:0;letter-spacing:-.01em}
+.sub,.note{color:var(--ink2);margin:2px 0 0}
+.note{font-size:13px}
+.bar{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center}
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+.seg button,.tog{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:7px 14px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.seg button:focus-visible,.tog:focus-within,.row:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.tog{display:inline-flex;gap:8px;align-items:center}
+.tog input{accent-color:var(--ink)}
+/* พื้นที่หลักแบ่ง 2 คอลัมน์ กราฟ 1.5 ส่วน รายชื่อสาขา 1 ส่วน
+   จอแคบกว่า 860px จะยุบเหลือคอลัมน์เดียว */
+.main{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,1fr);gap:16px}
+@media(max-width:860px){.main{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px;min-width:0}
+/* กราฟ SVG: .ax ชื่อแกน, .rg ตัวเลขกริด, .poly รูปทรงของสาขา, .vx จุดยอด
+   เมื่อ svg มี class hovering ทุกรูปที่ไม่มี class hov จะจางเหลือ 12% */
+svg{display:block;width:100%;height:auto;overflow:visible}
+svg text{font-family:var(--font);fill:var(--ink2);font-size:14px}
+svg .ax{fill:var(--ink);font-weight:600;font-size:15px}
+svg .rg{fill:var(--ink3);font-size:11px}
+svg .poly{transition:opacity .15s}
+svg.hovering .poly:not(.hov){opacity:.12}
+svg.hovering .vx:not(.hov){opacity:.12}
+.vx{cursor:pointer}
+/* รายชื่อสาขาด้านขวา: .row คือหนึ่งสาขา, สาขาที่ปิดอยู่ (aria-pressed="false") จะจางลง */
+.list{display:flex;flex-direction:column}
+.list h2{font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink2);margin:4px 6px 8px;font-weight:600}
+.row{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;padding:8px 8px;border-radius:6px;cursor:pointer;border-top:1px solid var(--line)}
+.row:first-of-type{border-top:0}
+.row:hover,.row.hov{background:var(--bg)}
+.row[aria-pressed="false"]{opacity:.45}
+.row svg{width:44px;height:14px;margin-top:5px}
+.row .nm{font-weight:600}
+.row .fg{grid-column:2;color:var(--ink2);font-size:12px;font-variant-numeric:tabular-nums}
+.row .tag{font-weight:400;color:var(--ink2)}
+/* tooltip ลอยตามเมาส์ ซ่อนไว้ก่อนด้วย display:none แล้ว JavaScript สั่งแสดง */
+#tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--bg);border-radius:6px;padding:8px 10px;font-size:12px;line-height:1.5;z-index:10;display:none;max-width:260px;box-shadow:0 4px 14px rgba(0,0,0,.2)}
+#tip .r{display:flex;justify-content:space-between;gap:16px;font-variant-numeric:tabular-nums}
+/* [เพิ่มใหม่] กล่องวิธีใช้: พับและกางได้ด้วยแท็ก details, ขั้นตอนเรียงเป็นคอลัมน์ตามความกว้างจอ */
+.how{padding:0}
+.how summary{display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;font-weight:600;list-style:none;border-radius:8px}
+.how summary::-webkit-details-marker{display:none}
+.how summary::before{content:"";flex:none;width:7px;height:7px;margin:0 3px 0 2px;border-right:2px solid var(--ink2);border-bottom:2px solid var(--ink2);transform:rotate(-45deg);transition:transform .15s}
+.how[open] summary::before{transform:rotate(45deg)}
+.how summary:focus-visible,.lang button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.lang{margin-left:auto;display:flex;gap:4px}
+.lang button{font:inherit;font-size:12px;font-weight:400;color:var(--ink2);background:transparent;border:1px solid var(--line);border-radius:999px;padding:3px 10px;cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.how ol{list-style:none;counter-reset:how;margin:0;padding:2px 12px 14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px 18px}
+.how li{counter-increment:how;display:grid;grid-template-columns:auto 1fr;gap:2px 9px;align-content:start;font-size:13px;color:var(--ink2)}
+.how li::before{content:counter(how);grid-row:1 / span 2;width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--bg);font-size:12px;font-weight:600;display:grid;place-items:center}
+.how li b{color:var(--ink);font-weight:600}
+.how li span{grid-column:2}
+</style>
+
+<!-- ===== ส่วนที่ 2 : HTML =====
+     กล่อง id="presets", id="sp" และ id="list" ว่างเปล่า รอ JavaScript เติมเนื้อหา
+     [แก้ไข: ข้อความ] หัวเรื่อง คำอธิบาย และหมายเหตุท้ายหน้า แก้ได้ตรงนี้โดยตรง -->
+<div class="wrap">
+  <div>
+    <h1>WhiteBottle Spider Chart</h1>
+    <p class="sub">Seven metrics, eight stores. Outward means a higher observed value. Hover a store to isolate it, click to show or hide it.</p>
+  </div>
+
+  <div class="bar">
+    <div class="seg" id="presets" role="group" aria-label="Quick views"></div>
+    <label class="tog"><input type="checkbox" id="flip"> Flip complaints so outward = fewer</label>
+  </div>
+
+  <!-- [เพิ่มใหม่] กล่องวิธีใช้ หัวข้อและขั้นตอนเติมโดย JavaScript จากตัวแปร HOW
+       มีคำว่า open = กางไว้ตอนเปิดหน้า -->
+  <details class="card how" id="how" open>
+    <summary><span id="howT"></span>
+      <span class="lang" role="group" aria-label="Language"><button type="button" data-lang="en">EN</button><button type="button" data-lang="th">ไทย</button></span>
+    </summary>
+    <ol id="howL"></ol>
+  </details>
+
+  <div class="main">
+    <div class="card"><svg id="sp" viewBox="0 20 720 580" role="img" aria-label="Spider chart of store metrics"></svg></div>
+    <div class="card list" id="list"></div>
+  </div>
+
+  <p class="note">Each axis runs from 0 (lowest store) to 100 (highest store) across all eight stores, so shapes show where a store sits relative to the others, not an overall score. Complaints are shown per 1,000 transactions; higher means worse service, and promotion spend is a cost, so a larger shape is not a better store. Hover a dot to see the actual value.</p>
+</div>
+<div id="tip" role="tooltip"></div>
+
+<!-- ===== ส่วนที่ 3 : JavaScript ===== -->
+<script>
+// ---------- 3.1 ข้อมูล ----------
+// [แก้ไข: ข้อมูล] หนึ่งวงเล็บคือหนึ่งสาขา ลำดับช่อง:
+// [รหัสสาขา, ทำเล, ยอดขาย (พันบาท), transactions ต่อเดือน, basket (บาท), repeat (%), rating (เต็ม 5), complaints (ครั้ง), promo (พันบาท)]
+const RAW=[["A","Mall",1250,11800,106,62,4.5,18,150],["B","Office",1120,14500,77,48,4.2,24,120],["C","Community",860,7900,109,68,4.6,10,70],["D","Transit",980,13600,72,35,3.8,42,135],["E","Mall",1320,12100,109,55,3.5,58,185],["F","Office",940,10200,92,61,4.4,14,95],["G","Community",760,6500,117,72,4.7,8,55],["H","Transit",1010,14900,68,32,3.7,47,160]];
+// แปลงแต่ละแถวของ RAW เป็น object ที่มีชื่อช่อง เพื่อเรียกใช้ง่าย เช่น s.sales
+const S=RAW.map(r=>({store:r[0],loc:r[1],sales:r[2],tx:r[3],basket:r[4],repeat:r[5],rating:r[6],complaints:r[7],promo:r[8]}));
+// คำนวณช่องเพิ่ม cpk = จำนวนร้องเรียนต่อ 1,000 transactions (เทียบกันได้ยุติธรรมกว่าจำนวนดิบ)
+S.forEach(s=>s.cpk=s.complaints/s.tx*1000);
+// IDS = รายการรหัสสาขา ["A",...,"H"], get("E") = ดึงข้อมูลของสาขา E
+const IDS=S.map(s=>s.store),get=k=>S.find(s=>s.store===k);
+// ---------- 3.2 แกนของกราฟ ----------
+// [แก้ไข: ตัวชี้วัด] หนึ่งบรรทัดคือหนึ่งแกน เรียงตามเข็มนาฬิกาเริ่มจากด้านบน
+// k = ชื่อช่องใน S, n = ชื่อที่แสดง, u = หน่วย, f = ฟังก์ชันจัดรูปแบบตัวเลขใน tooltip
+const AX=[
+ {k:"sales",n:"Monthly sales",u:"THB ’000",f:v=>v.toLocaleString()},
+ {k:"tx",n:"Transactions",u:"per month",f:v=>v.toLocaleString()},
+ {k:"basket",n:"Average basket",u:"THB",f:v=>v},
+ {k:"repeat",n:"Repeat-customer rate",u:"%",f:v=>v+"%"},
+ {k:"rating",n:"Customer rating",u:"/ 5",f:v=>v.toFixed(1)},
+ {k:"cpk",n:"Complaints per 1,000",u:"higher is worse",f:v=>v.toFixed(2)},
+ {k:"promo",n:"Promotion spending",u:"THB ’000",f:v=>v}];
+// หาค่าต่ำสุด (lo) และสูงสุด (hi) ของแต่ละแกนจากทุกสาขา เก็บไว้ใช้ปรับสเกล
+AX.forEach(a=>{const v=S.map(s=>s[a.k]);a.lo=Math.min(...v);a.hi=Math.max(...v)});
+// [แก้ไข: ลายเส้น] ลายเส้นประของแต่ละสาขา (ค่า stroke-dasharray) ค่าว่างคือเส้นทึบ
+// ใช้ลายเส้นคู่กับสี เพื่อให้แยกสาขาได้แม้มองสีไม่ชัด
+const DASH={E:"",G:"",H:"",A:"7 4",B:"2 3",C:"10 4 2 4",D:"4 4",F:"1 4"};
+// [แก้ไข: ปุ่มชุดสาขา] แต่ละปุ่มคือ [ข้อความบนปุ่ม, รหัสปุ่ม, รายการสาขาที่จะแสดง]
+const PRE=[["E · G · H","case",["E","G","H"]],["Mall: A vs E","m",["A","E"]],["Community: C vs G","c",["C","G"]],["Transit: D vs H","t",["D","H"]],["All 8 stores","all",IDS]];
+// ---------- 3.3 สถานะของหน้า ----------
+// [แก้ไข: ค่าเริ่มต้น] on = สาขาที่แสดงอยู่, hover = สาขาที่กำลังชี้, flip = กลับแกน complaints หรือไม่, pre = ปุ่มที่ถูกเลือก
+const st={on:new Set(["E","G","H"]),hover:null,flip:false,pre:"case"};
+// ตัวย่อของ document.getElementById
+const $=id=>document.getElementById(id);
+// ---------- 3.4 การคำนวณ ----------
+// score: ปรับค่าดิบเป็นสเกล 0 ถึง 100 แบบ min-max = (ค่า - ต่ำสุด) / (สูงสุด - ต่ำสุด) x 100
+// ถ้าเปิด flip และเป็นแกน cpk จะกลับค่าเป็น 100 - ค่าเดิม
+const score=(s,a)=>{let v=(s[a.k]-a.lo)/(a.hi-a.lo)*100;if(st.flip&&a.k==="cpk")v=100-v;return v};
+// rank: อันดับของสาขาในแกนนั้น เรียงจากค่ามากไปน้อย (1 = ค่าสูงสุด ไม่ได้แปลว่าดีที่สุด)
+const rank=(s,a)=>[...S].sort((p,q)=>q[a.k]-p[a.k]).findIndex(x=>x.store===s.store)+1;
+// [แก้ไข: ขนาดกราฟ] CX, CY = จุดศูนย์กลาง, R = รัศมี (หน่วยเดียวกับ viewBox ของ svg), N = จำนวนแกน
+const CX=360,CY=300,R=200,N=AX.length;
+// ang(i): มุมของแกนที่ i เริ่มที่ -90 องศา (ชี้ขึ้น) แล้วแบ่งวงกลมเท่ากัน N ส่วน
+const ang=i=>-Math.PI/2+i*2*Math.PI/N;
+// P(i, v): แปลง (แกนที่ i, ค่า v บนสเกล 0 ถึง 100) เป็นพิกัด [x, y] บน SVG
+const P=(i,v)=>[CX+Math.cos(ang(i))*R*v/100,CY+Math.sin(ang(i))*R*v/100];
+
+// ---------- 3.5 Tooltip ----------
+// showTip วางกล่องข้างเมาส์ ถ้าจะล้นขอบขวาหรือขอบล่างของหน้าต่างจะพลิกไปอีกด้าน
+const tip=$("tip");
+function showTip(ev,h){tip.innerHTML=h;tip.style.display="block";const w=tip.offsetWidth,hh=tip.offsetHeight;let x=ev.clientX+14,y=ev.clientY+14;if(x+w>innerWidth-8)x=ev.clientX-w-14;if(y+hh>innerHeight-8)y=ev.clientY-hh-14;tip.style.left=Math.max(8,x)+"px";tip.style.top=Math.max(8,y)+"px"}
+const hideTip=()=>tip.style.display="none";
+
+// ---------- 3.6 การเน้นสาขาที่ชี้ ----------
+// ใส่ class hovering ที่ svg และ class hov ให้ทุก element ที่มี data-s ตรงกับสาขานั้น (CSS จัดการเรื่องจางเอง)
+function setHover(id){
+  st.hover=id;
+  const svg=$("sp");svg.classList.toggle("hovering",!!id);
+  document.querySelectorAll("[data-s]").forEach(n=>n.classList.toggle("hov",n.dataset.s===id));
+}
+// ---------- 3.7 ปุ่มชุดสาขา ----------
+// สร้างปุ่มจาก PRE เมื่อคลิกจะแทนที่ชุดสาขาที่แสดงทั้งหมด แล้ววาดใหม่
+function presets(){
+  $("presets").innerHTML=PRE.map(p=>`<button data-p="${p[1]}" aria-pressed="${st.pre===p[1]}">${p[0]}</button>`).join("");
+  $("presets").querySelectorAll("button").forEach(b=>b.onclick=()=>{const p=PRE.find(x=>x[1]===b.dataset.p);st.on=new Set(p[2]);st.pre=p[1];draw()});
+}
+// ---------- 3.8 วาดกราฟ ----------
+// ต่อข้อความ SVG ลงในตัวแปร g ทีละชั้น แล้วใส่เข้า svg ครั้งเดียวตอนท้าย
+function chart(){
+  const a=IDS.filter(i=>st.on.has(i)).map(get);
+  let g="";
+  // ชั้นที่ 1: เส้นกริดเจ็ดเหลี่ยมที่ระดับ 25, 50, 75, 100 พร้อมตัวเลขกำกับ
+  [25,50,75,100].forEach(v=>{g+=`<polygon points="${AX.map((_,i)=>P(i,v).join(",")).join(" ")}" fill="none" stroke="var(--grid)"/>`;g+=`<text class="rg" x="${CX+6}" y="${CY-R*v/100+11}">${v}</text>`});
+  // ชั้นที่ 2: เส้นแกนและป้าย 3 บรรทัด (ชื่อแกน, ช่วงค่าต่ำสุดถึงสูงสุด, หน่วย)
+  // ป้ายวางที่ 126% ของรัศมี และจัดชิดซ้าย กลาง หรือขวาตามตำแหน่งรอบวง
+  AX.forEach((ax,i)=>{
+    const [x,y]=P(i,100),[lx,ly]=P(i,126),c=Math.cos(ang(i)),anchor=Math.abs(c)<.3?"middle":c>0?"start":"end";
+    g+=`<line x1="${CX}" y1="${CY}" x2="${x}" y2="${y}" stroke="var(--grid)"/>`;
+    const flipped=st.flip&&ax.k==="cpk";
+    g+=`<text class="ax" x="${lx}" y="${ly}" text-anchor="${anchor}">${ax.n}</text><text x="${lx}" y="${ly+18}" text-anchor="${anchor}">${ax.lo<10?ax.lo.toFixed(2):ax.lo.toLocaleString()}–${ax.hi<10?ax.hi.toFixed(2):ax.hi.toLocaleString()}${flipped?" · flipped":""}</text><text x="${lx}" y="${ly+34}" text-anchor="${anchor}" style="font-size:12px;fill:var(--ink3)">${ax.u}</text>`;
+  });
+  // ชั้นที่ 3: รูปทรงของแต่ละสาขา ถ้าเลือกไม่เกิน 3 สาขาจะระบายสีเข้มขึ้น (12%) ไม่งั้นจาง (4%)
+  // [แก้ไข: สาขาที่เน้น] E G H ใช้เส้นหนา 3 สาขาอื่นหนา 2
+  // polygon class hit คือเส้นโปร่งใสหนา 14 ที่ซ้อนไว้ให้ชี้เมาส์ง่ายขึ้น
+  const sel=a.length<=3;
+  a.forEach(s=>{
+    const pts=AX.map((ax,i)=>P(i,score(s,ax)).join(",")).join(" ");
+    g+=`<g class="poly" data-s="${s.store}"><polygon points="${pts}" fill="var(--${s.store})" fill-opacity="${sel?.12:.04}" stroke="var(--${s.store})" stroke-width="${["E","G","H"].includes(s.store)?3:2}" stroke-dasharray="${DASH[s.store]}" stroke-linejoin="round"/>
+      <polygon class="hit" points="${pts}" fill="none" stroke="transparent" stroke-width="14"/></g>`;
+  });
+  // ชั้นที่ 4: จุดยอด แต่ละจุดมีวงกลมโปร่งใสรัศมี 14 ซ้อนอยู่ เป็นพื้นที่รับเมาส์
+  a.forEach(s=>{
+    AX.forEach((ax,i)=>{const [x,y]=P(i,score(s,ax));
+      g+=`<g class="vx" data-s="${s.store}" data-i="${i}"><circle cx="${x}" cy="${y}" r="14" fill="transparent"/><circle cx="${x}" cy="${y}" r="4.5" fill="var(--${s.store})" stroke="var(--surface)" stroke-width="1.5"/></g>`});
+    // บรรทัดถัดไปประกาศตัวแปรแล้วไม่ได้ใช้ ลบออกได้โดยไม่กระทบการทำงาน
+    const [x,y]=P(0,score(s,AX[0]));
+  });
+  // ใส่ SVG ที่ต่อไว้ทั้งหมดลงในหน้า แล้วผูกเหตุการณ์เมาส์
+  $("sp").innerHTML=g;
+  $("sp").querySelectorAll(".poly").forEach(n=>{
+    const s=get(n.dataset.s);
+    n.onmouseenter=()=>setHover(s.store);n.onmouseleave=()=>{setHover(null);hideTip()};
+    n.onmousemove=e=>showTip(e,`<b>Store ${s.store}</b> · ${s.loc}`);
+  });
+  // tooltip ของจุดยอด: ค่าจริง, ตำแหน่งบนสเกล, อันดับ
+  // [แก้ไข: จำนวนสาขา] คำว่า "of 8" เขียนตายตัว ถ้าเพิ่มหรือลดสาขาต้องแก้ตรงนี้ด้วย
+  $("sp").querySelectorAll(".vx").forEach(n=>{
+    const s=get(n.dataset.s),ax=AX[+n.dataset.i];
+    n.onmouseenter=()=>setHover(s.store);
+    n.onmousemove=e=>showTip(e,`<b>Store ${s.store}</b> · ${s.loc}<div class="r"><span>${ax.n}</span><span>${ax.f(s[ax.k])}</span></div><div class="r"><span>Scale position</span><span>${Math.round(score(s,ax))} / 100</span></div><div class="r"><span>Rank (1 = highest value)</span><span>${rank(s,ax)} of 8</span></div>`);
+    n.onmouseleave=()=>{setHover(null);hideTip()};
+  });
+}
+// ---------- 3.9 รายชื่อสาขาด้านขวา ----------
+// sw(id) วาดตัวอย่างเส้นของสาขา (สีและลายเส้น) จากนั้นสร้างหนึ่งแถวต่อหนึ่งสาขาพร้อมตัวเลขดิบ
+function list(){
+  const sw=id=>`<svg viewBox="0 0 44 14"><line x1="2" x2="42" y1="7" y2="7" stroke="var(--${id})" stroke-width="3" stroke-dasharray="${DASH[id]}" stroke-linecap="round"/><circle cx="22" cy="7" r="4" fill="var(--${id})"/></svg>`;
+  $("list").innerHTML=`<h2>Stores and raw figures</h2>`+S.map(s=>`<div class="row" data-s="${s.store}" tabindex="0" role="button" aria-pressed="${st.on.has(s.store)}">${sw(s.store)}
+    <div class="nm">Store ${s.store} <span class="tag">· ${s.loc}</span></div>
+    <div class="fg">Sales ${s.sales.toLocaleString()}k · Transactions ${s.tx.toLocaleString()} · Basket THB ${s.basket}<br>Repeat ${s.repeat}% · Rating ${s.rating.toFixed(1)} · Complaints/1k ${s.cpk.toFixed(2)} · Promo ${s.promo}k</div></div>`).join("");
+  // คลิกหรือกด Enter/Space เพื่อเปิดปิดสาขา และบังคับให้เหลืออย่างน้อย 1 สาขาเสมอ
+  $("list").querySelectorAll(".row").forEach(r=>{
+    const id=r.dataset.s;
+    r.onmouseenter=()=>setHover(st.on.has(id)?id:null);r.onmouseleave=()=>setHover(null);
+    const toggle=()=>{st.on.has(id)?st.on.delete(id):st.on.add(id);if(!st.on.size)st.on.add(id);st.pre="";draw()};
+    r.onclick=toggle;r.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();toggle()}};
+  });
+}
+// ---------- 3.10 เริ่มทำงาน ----------
+// เมื่อติ๊ก checkbox ให้จำสถานะ flip แล้ววาดใหม่
+$("flip").onchange=e=>{st.flip=e.target.checked;draw()};
+// draw() วาดใหม่ทั้งหน้าทุกครั้งที่สถานะเปลี่ยน แล้วเรียกหนึ่งครั้งตอนเปิดหน้า
+function draw(){presets();chart();list();setHover(null)}
+draw();
+
+// ---------- 3.11 [เพิ่มใหม่] กล่องวิธีใช้ ----------
+// [แก้ไข: ข้อความวิธีใช้] t = หัวข้อ, s = ขั้นตอน แต่ละขั้นคือ [ตัวหนา, คำอธิบาย] ต้องมีครบทั้ง en และ th
+const HOW={
+ en:{t:"How to use this chart",s:[
+  ["Pick a quick view","The buttons above show a ready-made group of stores, such as E · G · H or all 8."],
+  ["Hover a shape or a store name","That store stays bold and the others fade. On a touch screen, tap instead."],
+  ["Hover a dot","See the actual value, its position on the 0–100 scale and the store’s rank on that metric."],
+  ["Click a store in the list","Show or hide it on the chart (Enter or Space also works). Faded names are hidden stores."],
+  ["Tick “Flip complaints”","Reverses the complaints axis, so outward means fewer complaints."]]},
+ th:{t:"วิธีใช้กราฟนี้",s:[
+  ["เลือกชุดสาขา","กดปุ่มด้านบนเพื่อแสดงชุดสาขาสำเร็จรูป เช่น E · G · H หรือทั้ง 8 สาขา"],
+  ["ชี้ที่รูปทรงหรือชื่อสาขา","สาขานั้นจะเด่นขึ้น ส่วนสาขาอื่นจางลง ถ้าใช้จอสัมผัสให้แตะแทน"],
+  ["ชี้ที่จุดบนกราฟ","ดูค่าจริง ตำแหน่งบนสเกล 0–100 และอันดับของสาขาในตัวชี้วัดนั้น"],
+  ["คลิกสาขาในรายการ","เปิดหรือปิดสาขานั้นบนกราฟ (กด Enter หรือ Space ก็ได้) ชื่อที่จางคือสาขาที่ปิดอยู่"],
+  ["ติ๊ก “Flip complaints”","กลับแกนร้องเรียน ให้ยิ่งออกด้านนอกยิ่งร้องเรียนน้อย"]]}};
+// [แก้ไข: ภาษาเริ่มต้น] "en" หรือ "th"
+let lang="en";
+function how(){
+  const h=HOW[lang];
+  $("howT").textContent=h.t;
+  $("howL").innerHTML=h.s.map(x=>`<li><b>${x[0]}</b><span>${x[1]}</span></li>`).join("");
+  document.querySelectorAll("#how [data-lang]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.lang===lang));
+}
+// preventDefault กันไม่ให้การกดปุ่มภาษาไปพับกล่อง (เพราะปุ่มอยู่ในแถบหัวกล่อง)
+document.querySelectorAll("#how [data-lang]").forEach(b=>b.onclick=e=>{e.preventDefault();lang=b.dataset.lang;how()});
+how();
+</script>
+
+</body></html>
